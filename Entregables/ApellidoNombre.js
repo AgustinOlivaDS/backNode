@@ -16,6 +16,10 @@ class Usuario{
         this.Mascotas.push(newMascota)
     }
 
+    countMascotas(){
+        return this.Mascotas.length
+    }
+
     addBook(newBook){
         //Use de push method to add an object to the array
         this.Libros.push(newBook)
@@ -35,8 +39,11 @@ const newuser = new Usuario("Agustín", "Oliva", [{nombre: "Libro 1", autor: "Au
 //Use of the addMascota method to add a new pet to the array
 newuser.addMascota("Mascota 3")
 
+//Use of the countMascotas method to get the amount of pets
+console.log(`You have ${newuser.countMascotas()} pets`)
+
 //Test getFullName method
-console.log(newuser.getFullName())
+console.log(`Your fullname is ${newuser.getFullName()}`)
 
 //Use of the addBook method to add a new book object to the Librros arrray
 newuser.addBook({nombre: "Libro 3", autor: "Autor 2"})
