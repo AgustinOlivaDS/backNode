@@ -1,26 +1,9 @@
 class Usuario{
-    constructor(nombre, apellido, libros, mascotas){
-        if(nombre != null){
-            this.Nombre = nombre
-        } else { 
-            this.Nombre = "" //Initialize with emnpty string when parameters is undefined
-        }
-
-        if(apellido != null){
-            this.Apellido = apellido
-        } else { 
-            this.Apellido = "" //Initialize with emnpty string when parameters is undefined
-        }
-        if(libros != null){
-            this.Libros = libros
-        } else { 
-            this.Libros = [] //Initialize with emnpty array when parameters is undefined
-        }
-        if(mascotas != null){
-            this.Mascotas = mascotas
-        } else { 
-            this.Mascotas = [] //Initialize with emnpty array when parameters is undefined
-        }
+    constructor(nombre = "", apellido = "", libros = [], mascotas = []){
+        this.Nombre = nombre
+        this.Apellido = apellido
+        this.Libros = libros
+        this.Mascotas = mascotas
     }
 
     getFullName(){
