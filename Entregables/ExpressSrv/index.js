@@ -6,7 +6,7 @@ const filename = './productos.txt'
 const contenedor = new Contenedor(filename)
 
 app.get('/', function (req, res, next){
-    var home = '<h2>Servidor con dos endpoints desarrollador con Node/Express</h2>'
+    var home = '<h2>Servidor con dos endpoints desarrollado con Node/Express</h2>'
     home += '<h3><a href="/productos">Get All Products </a></h3>'
     home += '<h3><a href="/productoRandom">Get one random Product</a></h3>'
     res.send(home)
