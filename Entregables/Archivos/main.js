@@ -44,7 +44,7 @@ module.exports = class Contenedor{
             }
         }
         catch(er){
-            console.log(er)
+            console.log(`Error en getAll: ${er}`)
         }
 
         return products   

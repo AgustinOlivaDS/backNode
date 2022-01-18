@@ -1,0 +1,23 @@
+{
+  "name": "npm-init-1",
+  "version": "1.0.0",
+  "description": "primero",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AgustinOlivaDS/backNode.git"
+  },
+  "author": "Agustin Oliva",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AgustinOlivaDS/backNode/issues"
+  },
+  "homepage": "https://github.com/AgustinOlivaDS/backNode#readme"
+}
