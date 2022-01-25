@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Datos Personales</h1>
+    <ul>
+        <li>{{ nombre }}</li>
+        <li>{{ apellido }}</li>
+        <li>{{ edad }}</li>
+        <li>{{ email }}</li>
+        <li>{{ telefono }}</li>
+    </ul>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script> 
+    <script>
+        const template = Handlebars.compile('<li>{{ nombre }}</li><li>{{ apellido }}</li><li>{{ edad }}</li><li>{{ email }}</li><li>{{ telefono }}</li>')
+        const content = template({nombre: 'Agustin', apellido: 'Oliva', edad: 46, email: 'aoliva@luxsys.com.ar', telefono: '31651344'})
+        document.querySelector('ul').innerHTML = content
+    </script> 
+
+</body>
+</html>
