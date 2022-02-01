@@ -1,0 +1,36 @@
+extends layouts/index.pug
+
+block vista
+    style.
+        .jumbotron {
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: green;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+    div(class="jumbotron")
+        h1='Lista de Productos'
+        br
+        if hayProductos
+            div(class="table-responsive")
+                table(class="table table-dark")
+                    tr
+                        th='Nombre'
+                        th='Precio'
+                        th='Foto'
+                        each producto in allProducts.productos
+                            tr
+                                td=producto.title
+                                td=producto.price
+                                td
+                                    img(width="50" src=producto.thumbnail alt="not found")
+        else
+            h3(class="alert alert-warning")=allProducts.error
+        br
+        a(href="/" type="button" class="btn btn-primary")='Nuevo producto'
