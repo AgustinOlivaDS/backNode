@@ -3,12 +3,13 @@ const app: typeof express = express()
 const PORT: number = 8080
 const prod_routes: any = require('../routes/productos')
 const cart_routes: any = require('../routes/carritos')
+
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
 //Validate User
 app.use(function(req: any, res: any, next: any) {
-    req.administrador = false
+    req.administrador = true
     console.log(`administrador ${req.administrador}`)
     next()
 });

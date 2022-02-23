@@ -1,0 +1,16 @@
+[
+  {
+    "title": "Escuadra1",
+    "price": 123.46,
+    "thumbnail": "httm://Esc1.jpg",
+    "id": 1,
+    "timestamp": 1645574213125
+  },
+  {
+    "title": "Escuadra2",
+    "price": 123.46,
+    "thumbnail": "httm://Esc2.jpg",
+    "id": 2,
+    "timestamp": 1645574213126
+  }
+]

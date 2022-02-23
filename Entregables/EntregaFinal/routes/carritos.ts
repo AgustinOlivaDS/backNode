@@ -1,40 +1,54 @@
 import express from 'express'
 const Carritos = require('../src/Carritos')
 var carritos = express.Router()
-const Carrits = new Carritos()
+const Carrits = new Carritos('./public/carritos.json')
 
 
-carritos.post('/', (req: any, res: any) => {
+
+carritos.post('/', async (req: any, res: any) => {
     const cart: typeof Carrito = req.body
-    res.json(Carrits.save(cart))
+    res.json(await Carrits.save(cart))
 })
 
-carritos.delete('/:id', (req: any, res: any) => {
+carritos.delete('/:id', async (req: any, res: any) => {
     const id:number = parseInt(req.params.id)
-    res.json(Carrits.deleteById(id))
+    res.json(await Carrits.deleteById(id))
 })
 
-carritos.get('/:id/productos', (req: any, res: any) => {
+carritos.get('/:id/productos', async (req: any, res: any) => {
     const id = parseInt(req.params.id)
-    res.json(Carrits.getById(id).productos)
+    res.json(await Carrits.getById(id).productos)
 })
 
-carritos.put('/:id', (req: any, res: any) => {
+carritos.post('/:id/productos', async (req: any, res: any) => {
+    const id = parseInt(req.params.id)
+    const prodcart: typeof ProdCarrito = req.body
+    res.json(await Carrits.saveProductoById(id, prodcart))
+})
+
+carritos.put('/:id', async (req: any, res: any) => {
     const id: number = parseInt(req.params.id)
     const cart: typeof Carrito = req.body
-    res.json(Carrits.update(id, cart))
+    res.json(await Carrits.update(id, cart))
 })
 
-carritos.get('/:id/productos/:id_prod', (req: any, res: any) => {
+carritos.get('/:id/productos/:id_prod', async (req: any, res: any) => {
     const id = parseInt(req.params.id)
     const id_prod = parseInt(req.params.id_prod)
 
-    res.json(Carrits.getProductoById(id, id_prod))
+    res.json(await Carrits.getProductoById(id, id_prod))
 })
 
-carritos.get('/:id', (req: any, res: any) => {
+carritos.delete('/:id/productos/:id_prod', async (req: any, res: any) => {
     const id = parseInt(req.params.id)
-    res.json(Carrits.getById(id))
+    const id_prod = parseInt(req.params.id_prod)
+
+    res.json(await Carrits.deleteProductoById(id, id_prod))
+})
+
+carritos.get('/:id', async (req: any, res: any) => {
+    const id = parseInt(req.params.id)
+    res.json(await Carrits.getById(id))
 })
 
 module.exports = carritos

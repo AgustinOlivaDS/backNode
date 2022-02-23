@@ -1,15 +1,19 @@
 const Carrito = require('./Carrito')
 
+const { promises: fs } = require('fs')
 module.exports = class Carritos{
     
-    static carritos: typeof Carrito[]  = []
-    constructor(){
-        Carritos.carritos = []
+    private carritos: typeof Carrito[]  = []
+    private ruta: string = ""
+
+    constructor(ruta: string){
+        this.ruta = ruta
     }
 
-    save(carrito: typeof Carrito){
-        if(Carritos.carritos.length > 0){
-            carrito.id = Carritos.carritos[Carritos.carritos.length-1].id + 1
+    async save(carrito: typeof Carrito){
+        this.carritos = await this.getAllFromFile()
+        if(this.carritos.length > 0){
+            carrito.id = this.carritos[this.carritos.length-1].id + 1
         }
         else{
             carrito.id = 1
@@ -18,20 +22,32 @@ module.exports = class Carritos{
         carrito.productos.forEach((element: typeof ProdCarrito) => {
             element.timestamp = Date.now()
         });
-        Carritos.carritos.push(carrito)
+        this.carritos.push(carrito)
+
+        try {
+            await fs.writeFile(this.ruta, JSON.stringify(this.carritos, null, 2))
+        } catch (error) {
+            throw new Error(`Error al borrar todo: ${error}`)
+        }
         
         return {error: 'ok', id: carrito.id}   
     }
 
-    update(id_Carrito: number, carrito: typeof Carrito){
-        let founded = Carritos.carritos.findIndex(element => element.id === id_Carrito)
+    async update(id_Carrito: number, carrito: typeof Carrito){
+        this.carritos = await this.getAllFromFile()
+        let founded = this.carritos.findIndex(element => element.id === id_Carrito)
         console.log(founded)
         if(founded === -1){    
             return {error: 'Carrito no encontrado'}
         } else {
             try{
-                Carritos.carritos[founded].productos = carrito.productos
-                return {error: 'ok', carritos: Carritos.carritos[founded]}
+                this.carritos[founded].productos = carrito.productos
+                try {
+                    await fs.writeFile(this.ruta, JSON.stringify(this.carritos, null, 2))
+                } catch (error) {
+                    throw new Error(`Error al borrar todo: ${error}`)
+                }
+                return {error: 'ok', carritos: this.carritos[founded]}
             }
             catch(er){
                 return {error: er}
@@ -39,9 +55,9 @@ module.exports = class Carritos{
         }
     }
 
-    getById(id_Carrito: number){
-        
-        let founded = Carritos.carritos.find(element => element.id === id_Carrito)
+    async getById(id_Carrito: number){
+        this.carritos = await this.getAllFromFile()
+        let founded = this.carritos.find(element => element.id === id_Carrito)
 
         if(typeof founded === 'undefined'){
             return {error: 'Carrito no encontrado', carritos: founded}
@@ -50,12 +66,13 @@ module.exports = class Carritos{
         }
     }
 
-    getProductoById(id_Carrito: number, id_Producto: number){
-        let founded = Carritos.carritos.findIndex(element => element.id === id_Carrito) 
+    async getProductoById(id_Carrito: number, id_Producto: number){
+        this.carritos = await this.getAllFromFile()
+        let founded = this.carritos.findIndex(element => element.id === id_Carrito) 
         if(!(typeof founded === 'undefined')){
-            let Prodfounded = Carritos.carritos[founded].productos.findIndex((pelement: typeof ProdCarrito) => pelement.id === id_Producto) 
+            let Prodfounded = this.carritos[founded].productos.findIndex((pelement: typeof ProdCarrito) => pelement.id === id_Producto) 
             if(!(typeof Prodfounded === 'undefined')){
-                Carritos.carritos[founded].productos.splice(Prodfounded, 1)
+                this.carritos[founded].productos.splice(Prodfounded, 1)
                 return {error: 'ok', producto: Prodfounded}   
             } else {
                 return {error: `No existe producto con id: ${id_Producto}`}
@@ -65,31 +82,68 @@ module.exports = class Carritos{
         }
     }
 
-    getAll(){
-        console.log(Carritos.carritos)
-        if(Carritos.carritos.length > 0){
-            return {error: 'ok', carritos: Carritos.carritos}   
+    async saveProductoById(id_Carrito: number, prodcarrito: typeof ProdCarrito){
+        this.carritos = await this.getAllFromFile()
+        let founded = this.carritos.findIndex(element => element.id === id_Carrito) 
+        if(!(typeof founded === 'undefined')){
+            if(this.carritos[founded].productos.length > 0){
+                prodcarrito.id = this.carritos[founded].productos[this.carritos[founded].productos.length-1].id + 1
+            }
+            else{
+                prodcarrito.id = 1
+            }
+            prodcarrito.timestamp = Date.now()
+            this.carritos[founded].productos.push(prodcarrito)
+            try {
+                await fs.writeFile(this.ruta, JSON.stringify(this.carritos, null, 2))
+            } catch (error) {
+                throw new Error(`Error al borrar todo: ${error}`)
+            }
+            return {error: 'ok'}
         } else {
-            return {error: 'No existen carritos', carritos: Carritos.carritos}
+            return {error: `No existe carrito con id: ${id_Carrito}`}
         }
     }
 
-    deleteById(id_Carrito: number){
-        let founded = Carritos.carritos.findIndex(element => element.id === id_Carrito) 
+
+    async getAll(){
+        this.carritos = await this.getAllFromFile()
+        console.log(this.carritos)
+        if(this.carritos.length > 0){
+            return {error: 'ok', carritos: this.carritos}   
+        } else {
+            return {error: 'No existen carritos', carritos: this.carritos}
+        }
+    }
+
+    async deleteById(id_Carrito: number){
+        this.carritos = await this.getAllFromFile()
+        let founded = this.carritos.findIndex(element => element.id === id_Carrito) 
         if(!(typeof founded === 'undefined')){
-            Carritos.carritos.splice(founded, 1)
+            this.carritos.splice(founded, 1)
+            try {
+                await fs.writeFile(this.ruta, JSON.stringify(this.carritos, null, 2))
+            } catch (error) {
+                throw new Error(`Error al borrar todo: ${error}`)
+            }
             return {error: 'Carrito Eliminado'}   
         } else {
             return {error: `No existe carrito con id: ${id_Carrito}`}
         }
     }
 
-    deleteProductoById(id_Carrito: number, id_Producto: number){
-        let founded = Carritos.carritos.findIndex(element => element.id === id_Carrito) 
+    async deleteProductoById(id_Carrito: number, id_Producto: number){
+        this.carritos = await this.getAllFromFile()
+        let founded = this.carritos.findIndex(element => element.id === id_Carrito) 
         if(!(typeof founded === 'undefined')){
-            let Prodfounded = Carritos.carritos[founded].productos.findIndex((pelement: typeof ProdCarrito) => pelement.id === id_Producto) 
+            let Prodfounded = this.carritos[founded].productos.findIndex((pelement: typeof ProdCarrito) => pelement.id === id_Producto) 
             if(!(typeof Prodfounded === 'undefined')){
-                Carritos.carritos[founded].productos.splice(Prodfounded, 1)
+                this.carritos[founded].productos.splice(Prodfounded, 1)
+                try {
+                    await fs.writeFile(this.ruta, JSON.stringify(this.carritos, null, 2))
+                } catch (error) {
+                    throw new Error(`Error al borrar todo: ${error}`)
+                }
                 return {error: 'Producto Eliminado'}   
             } else {
                 return {error: `No existe producto con id: ${id_Producto}`}
@@ -99,7 +153,21 @@ module.exports = class Carritos{
         }
     }
 
-    deleteAll(){
-        Carritos.carritos = []
+    async deleteAll(){
+        try {
+            await fs.writeFile(this.ruta, JSON.stringify([], null, 2))
+        } catch (error) {
+            throw new Error(`Error al borrar todo: ${error}`)
+        }
+    }
+
+    async getAllFromFile(){
+        try {
+            const obj = await fs.readFile(this.ruta, 'utf-8')
+            return JSON.parse(obj)
+        } catch (error) {
+            console.log(error)
+            return []
+        }
     }
 }
