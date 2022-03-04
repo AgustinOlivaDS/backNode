@@ -1,0 +1,115 @@
+// crea la base
+use ecommerce
+
+// crea la collection productos de forma implicita con los inserts
+db.productos.insert({"id":1, "title":"Escuadra2","price":123.45,"thumbnail":"httm://Esc.jpg"})
+db.productos.insert({"id":2, "title":"Regla","price":900,"thumbnail":"httm://Regla.jpg"})
+db.productos.insert({"id":3, "title":"Escuadra3","price":580,"thumbnail":"httm://Esc3.jpg"})
+db.productos.insert({"id":4, "title":"Goma de borrar","price":1280,"thumbnail":"httm://Goma.jpg"})
+db.productos.insert({"id":5, "title":"Calculadora","price":1700,"thumbnail":"httm://Calc.jpg"})
+db.productos.insert({"id":6, "title":"Carpeta","price":2300,"thumbnail":"httm://Carpeta.jpg"})
+db.productos.insert({"id":7, "title":"Marcadores","price":2860,"thumbnail":"httm://MArcadores.jpg"})
+db.productos.insert({"id":8, "title":"Lapicera","price":3350,"thumbnail":"httm://Lapicera.jpg"})
+db.productos.insert({"id":9, "title":"Cartuchera","price":4320,"thumbnail":"httm://Cartuchera.jpg"})
+db.productos.insert({"id":10, "title":"Notebook","price":4990,"thumbnail":"httm://Notebook.jpg"})
+
+// Crea la collection mensajes de forma implicita con un sólo insert con los 10 documentos
+db.mensajes.insertMany([
+   {
+     "autor": "agustinoliva@gmail.com",
+     "texto": "test",
+     "fyh": "8/2/2022 19:06:08",
+     "id": 1
+   },
+   {
+     "autor": "agustinoliva@gmail.com",
+     "texto": "dsfgdsfgsdgf",
+     "fyh": "8/2/2022 19:06:15",
+     "id": 2
+   },
+   {
+     "autor": "agustinoliva@gmail.com",
+     "texto": "mas",
+     "fyh": "8/2/2022 19:14:23",
+     "id": 3
+   },
+   {
+     "autor": "agustinoliva@gmail.com",
+     "texto": "fdgdsfg",
+     "fyh": "8/2/2022 19:14:25",
+     "id": 4
+   },
+   {
+     "autor": "agustinoliva@gmail.com",
+     "texto": "dsfgsdfg",
+     "fyh": "8/2/2022 19:14:27",
+     "id": 5
+   },
+   {
+     "autor": "nextorbeer@gmail.com",
+     "texto": "prueba",
+     "fyh": "9/2/2022 19:14:27",
+     "id": 6
+   },
+   {
+     "autor": "nextorbeer@gmail.com",
+     "texto": "prueba2",
+     "fyh": "9/2/2022 20:14:27",
+     "id": 7
+   },
+   {
+     "autor": "nextorbeer@gmail.com",
+     "texto": "prueba3",
+     "fyh": "9/2/2022 20:24:27",
+     "id": 8
+   },
+   {
+     "autor": "nextorbeer@gmail.com",
+     "texto": "prueba4",
+     "fyh": "9/2/2022 21:00:27",
+     "id": 9
+   },
+   {
+     "autor": "nextorbeer@gmail.com",
+     "texto": "prueba5",
+     "fyh": "10/2/2022 19:14:27",
+     "id": 10
+   }
+])
+// Listo todos los documentos de las dos collections
+db.productos.find()
+db.mensajes.find()
+// Muestra la cantidad de documentos de cada collection
+db.productos.count()
+db.mensajes.count()
+
+//inserto un nuevo producto
+db.productos.insert({"id":11, "title":"Transaportador","price":23.45,"thumbnail":"httm://Transp.jpg"})
+
+//Busco un producto específico por nombre
+db.productos.find({"title": "Regla"})
+
+//Busco productos con precio menor a 1000
+db.productos.find({"price": {$lt: 1000}})
+
+//Busco productos con precio mayor a 1000 y menor a 4000
+db.productos.find({$and: [{"price": {$lt: 4000}}, {"price": {$gt: 1000}}]})
+
+//Busco productos con precio mayor a 3000
+db.productos.find({"price": {$gt: 3000}})
+
+//Busco de dos formas distintas el tercer precio más barato limitando a 1 documento, salteando 2 y ordenando por precio.
+db.productos.find({}, {"title": 1}).skip(2).limit(1)._addSpecial("$orderby", {price: 1})
+db.productos.find({}, {"title": 1}).skip(2).limit(1).sort({price: 1})
+
+//Creo una nueva key "stock" en todos los documentos de la collection productos con valor 100
+db.productos.updateMany({}, {$set : {"stock": 100}})
+
+//Actualizo el stock a cero de los prudcots con precio mayor a 4000
+db.productos.updateMany({"price": {$gt: 4000}}, {$set : {"stock": 0}})
+
+//Borro los productos con precio menor a 1000
+db.productos.deleteMany({"price": {$lt: 1000}})
+
+//Creo un usuario sólo lectura sobre la base 
+db.createUser({user: "pepe",pwd: "asd456", roles: [{role:"read", db: "ecommerce"}]})
