@@ -1,30 +1,32 @@
-const express = require('express')
-const app = express()
+import "dotenv/config"
+import express from "express"
+import cors from "cors"
 const PORT = 8080
-const prod_routes = require('../routes/productos')
-const cart_routes = require('../routes/carritos')
+const app = express()
+import {route_productos} from "./routes/productos.js"
+import {route_carritos} from "./routes/carritos.js"
 
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.use(cors())
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-//Validate User
 app.use(function(req, res, next) {
     req.administrador = true
-    console.log(`administrador ${req.administrador}`)
     next()
 });
 
-app.use('/api/productos', prod_routes)
-app.use('/api/carrito', cart_routes)
+app.use('/api/productos', route_productos)
+app.use('/api/carrito', route_carritos)
 
 /*Not Found Page */
-app.use(function(req, res, next) {
-    res.status(404);
-    res.json({error: -2, descripcion: `Error 404. Ruta ${req.baseUrl} método ${req.method} no implementado`});
+app.use((req, res) => {
+    const pathError = {
+        error: -2,
+        descripcion: `Error 404. Ruta ${req.url} método ${req.method} no implementado`
+    }
+    res.send(pathError)
 });
-
-app.use('/', express.static(__dirname + '/public'))
-
-const server = app.listen(PORT, () => {
-    console.log(`Server linstening on port ${server.address().port}`)
+app.use(express.static("public"));
+app.listen(PORT,()=>{
+    console.log('server on')
 })

@@ -1,8 +1,8 @@
-module.exports = class Product{
-    id;
-    title;
-    price;
-    thumbnail;
+module.exports = class ProductDTO{
+    id
+    title
+    price
+    thumbnail
 
     constructor(){
         this.id = 0
@@ -11,4 +11,3 @@ module.exports = class Product{
         this.thumbnail = ""    
     }
 }
-

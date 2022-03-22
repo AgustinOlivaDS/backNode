@@ -1,13 +1,12 @@
-module.exports = class ProdCarrito{
-    id;
-    timestamp;
-    nombre;
-    descripcion; 
-    codigo; 
-    foto;
-    precio;
-    stock;
-    
+module.exports = class ProdInCartDTO{
+    id
+    timestamp = Date
+    nombre
+    descripcion
+    codigo
+    foto
+    precio
+    stock
     constructor(){
         this.id = 0
         this.timestamp = new Date();
